@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+  }
+  
+  .header {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+  }
+  
+  .header .carousel-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  *, :after, :before {
+    box-sizing: border-box;
+  }
+  
+  body {
+    display: block;
+    margin: 8px;
+  }
+  
+  .banner-slider-form {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .db-wrapper {
+    min-height: 65vh;
+  }
+  
+  .cover-img-bg {
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .cover-img {
+    width: 100%;
+    height: auto;
+  }
+  
+
+  .py-5 {
+    padding-bottom: 2rem !important;
+    padding-top: 2rem !important;
+  }
+  
+  .pt-5, .py-5 {
+    padding-top: 3rem !important;
+  }
+  
+  .py-5 {
+    padding-bottom: 3rem !important;
+  }
+  
+  .bg-gradient {
+    background: linear-gradient(0deg, #2176ff, #212425) !important;
+    transition: all .3s ease-out;
+  }
+  
+  .bg-gradient2 {
+    background: linear-gradient(0deg, #f0f3f0, #7f866a) !important;
+    transition: all .3s ease-out;
+  }
+  
+  .rounded-md-pill {
+    border-radius: 50rem !important;
+  }
+  
+  .smooth-shadow-md {
+    box-shadow: 0 9px 26px rgba(0, 0, 0, .19), 0 1.4932px 5.38611px rgba(0, 0, 0, .082), 0 .826568px 1.06088px rgba(0, 0, 0, .063) !important;
+  }
+  
+  .article-card {
+    width: 100%;
+    height: 220px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 300ms;
+  }
+  
+  .article-card .content {
+    box-sizing: border-box;
+    width: 100%;
+    position: absolute;
+    padding: 30px 20px 20px 20px;
+    height: auto;
+    bottom: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  }
+  
+  .article-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+  
+  .article-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .article-card .date {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 4px;
+    margin: 0;
+  }
+  
+section{
+  height: 120px;
+}
