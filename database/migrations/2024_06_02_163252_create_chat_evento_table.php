@@ -15,27 +15,16 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('evento_id');
             $table->unsignedBigInteger('user_id');
-  
+            $table->unsignedBigInteger('parent_id')->nullable(); // Agregar parent_id
+
             $table->text('contenido');
             $table->timestamps();
             $table->foreign('evento_id')->references('id')->on('eventos')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('parent_id')->references('id')->on('chat_evento')->onDelete('cascade'); // Agregar clave foránea para parent_id
         });
     }
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
-    public function evento()
-    {
-        return $this->belongsTo(Evento::class);
-    }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('chat_evento');

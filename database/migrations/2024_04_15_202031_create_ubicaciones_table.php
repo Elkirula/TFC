@@ -18,7 +18,7 @@ class CreateUbicacionesTable extends Migration
 
         Schema::table('eventos', function (Blueprint $table) {
             $table->dropColumn('ubicacion');
-            $table->unsignedBigInteger('ubicacion_id')->nullable()->after('user_id');
+            $table->unsignedBigInteger('ubicacion_id')->nullable()->after('eventos.user_id');
             $table->foreign('ubicacion_id')->references('id')->on('ubicaciones')->onDelete('set null');
         });
     }

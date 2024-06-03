@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Evento::class, 'evento_usuario');
     }
+
+    public function comentarios()
+    {
+        return $this->hasMany(ChatEvento::class);
+    }
 }
