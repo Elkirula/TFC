@@ -1,350 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+  <html lang="en">
+
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Home</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
-    @vite(['resources/css/busca_evento.css', 'resources/js/app.js'])
-    <title>Eventos</title>
-</head>
-<body>
-     <header>
+     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>Home</title>
+     {{-- @vite(['resources/css/home.css', 'resources/js/home.js']) --}}
+    @vite(['resources/css/busca_evento.css', 'resources/js/app.js']) <title>Eventos</title>
+  </head>
+
+  <body>
+    <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                <div class="container-fluid">
-                  <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Buscar">
-                    <button class="btn btn-primary" type="button">Buscar</button>
-                </div>
+            <div class="container-fluid">
+                <form action="{{ route('busca') }}" method="GET" class="d-flex w-100">
+                    <div class="input-group mb-3 w-100">
+                        <input type="text" name="query" class="form-control" placeholder="Buscar eventos..." value="{{ request('query') }}">
+                        <select name="categoria_id" class="form-select">
+                            <option value="">Todas las Categorías</option>
+                            @foreach($categorias as $categoria)
+                                <option value="{{ $categoria->id }}" name="categoria" {{ request('categoria_id') == $categoria->id ? 'selected' : '' }}>
+                                    {{ $categoria->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    <a class="nav-link active" href="#">Lugares</a>
-                    <a class="nav-link active" href="#">Categoria</a>
-                    <a class="nav-link active" href="#">Cuenta</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
+                        @auth
+                            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'organizador')
+                                <a class="nav-link active" href="{{ route('crear_evento') }}">Cuenta</a>
+                            @else
+                                <a class="nav-link active" href="{{ route('panel_usuario') }}">Cuenta</a>
+                            @endif
+                        @else
+                            <a class="nav-link active" href="{{ route('login') }}">Login</a>
+                        @endauth
                     </div>
                 </div>
-                </div>
+            </div>
         </nav>
-        <div class="text-center">
-            <img src="https://eventmie-pro-fullyloaded-demo.classiebit.com/storage/banners/November2023/l6KOsWwDM8fwGBnY83NG.webp" class="rounded mx-auto d-block" width="80%" >
-        </div>
-      
     </header>
-       <div class="py5">
-      <div class="container" >
-    
-           <div class="row justify-content-center">
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4">
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
+
+  @extends('layouts.app') 
+    <div class="py-5">
+        <div class="container">
+            @if($eventos->isEmpty())
+                <p>No hay eventos disponibles.</p>
+            @else
+                <div class="row">
+                    <div class="col-8">
+                        <h3>Eventos filtrados</h3>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
+                </div>
+                <div class="row justify-content-center">
+                    @foreach($eventos as $key => $evento)
+                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                            <div class="p-4" style="width: 100%;">
+                                <div class="article-card">
+                                    <div class="content">
+                                        <p class="date">{{ $evento->fecha }}</p>
+                                    </div>
+                                    @if($evento->multimedia)
+                                        <img src="data:image/jpeg;base64,{{ base64_encode($evento->multimedia->archivo) }}" alt="Imagen del Evento" style="width: 100%;">
+                                    @else
+                                        <img src="https://via.placeholder.com/300" alt="placeholder-image" style="width: 100%;" />
+                                    @endif
+                                </div>
+                                <h5>
+                                    <a href="{{ route('evento.show', ['id' => $evento->id]) }}" class="text-dark">{{ $evento->titulo }}</a>
+                                </h5>
+                                <p class="small text-muted mb-0">Valoración de evento: {{ number_format($evento->valoracion_media, 1) }} / 5</p>
+                                <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+                                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold"></span></p>
+                                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">{{ $evento->precio }}€</div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-12">
+                    {{ $eventos->links() }}
                   </div>
                 </div>
-              </div>
-            </div>
-     
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://eventmie-pro-fullyloaded-demo.classiebit.com/storage/events/November2023/1701256346Bo6Km2BpkC.webp" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-      
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-        </div>
-           <div class="row justify-content-center">
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4">
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-     
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://eventmie-pro-fullyloaded-demo.classiebit.com/storage/events/November2023/1701256346Bo6Km2BpkC.webp" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-      
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-        </div>
-           <div class="row justify-content-center">
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4">
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-     
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://eventmie-pro-fullyloaded-demo.classiebit.com/storage/events/November2023/1701256346Bo6Km2BpkC.webp" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-      
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-        </div>
-        <div class="row justify-content-center">
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4">
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-     
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://eventmie-pro-fullyloaded-demo.classiebit.com/storage/events/November2023/1701256346Bo6Km2BpkC.webp" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End -->
-      
-            <!-- Gallery item -->
-            <div class="col-md-4 col-12 mb-4 px-0" style="width: 438px;">
-              <div class="bg-white rounded">
-                <div class="p-4" style="width: 100%;">
-            
-                  <div class="article-card">
-                    <div class="content">
-                      <p class="date">Jan 1, 2022</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1482877346909-048fb6477632?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=958&q=80" alt="article-cover" />
-                  </div>
-                  <h5>
-                    <a href="#" class="text-dark">Red paint cup</a>
-                  </h5>
-                  <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                  <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>
-                    <div class="badge badge-danger px-3 rounded-pill font-weight-normal">New</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        <div class="demo">
-    <nav class="pagination-outer" aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="page-item">
-                <a href="#" class="page-link" aria-label="Previous">
-                    <span aria-hidden="true">PREV</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item active"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item">
-                <a href="#" class="page-link" aria-label="Next">
-                    <span aria-hidden="true">NEXT</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
-      </div>
+            @endif
+        </div>  
     </div>
-</body>
-</html>
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            <div class="row text-md-left">
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold">Eventos</h5>
+                    <p>La mejor web para disfrutar de eventos como de crealos y conocer gente nueva.</p>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold">Contact</h5>
+                    <p><i class="fas fa-envelope mr-3"></i> adminEventos@gmail.com</p>
+                    <p><i class="fas fa-phone mr-3"></i> + 36 234 567 88</p>
+                </div>
+            </div>
+            <hr class="mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-lg-12">
+                    <p class="text-center text-md-left">© 2024 Copyright:
+                        <a href="#" style="text-decoration: none;">
+                            <strong class="text-white"> kirutfc.xyz</strong>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+  </body>
+
+  </html>

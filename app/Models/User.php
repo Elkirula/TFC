@@ -6,10 +6,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-class User extends Authenticatable
+use Multicaret\Acquaintances\Traits\Friendable;
+use Multicaret\Acquaintances\Traits\CanFollow;
+use Multicaret\Acquaintances\Traits\CanBeFollowed;
+use Multicaret\Acquaintances\Traits\CanLike;
+use Multicaret\Acquaintances\Traits\CanBeLiked;
+use Multicaret\Acquaintances\Traits\CanRate;
+use Multicaret\Acquaintances\Traits\CanBeRated;
+use RyanChandler\Comments\Concerns\HasComments;
+class User extends Authenticatable 
 {
     use HasFactory, Notifiable;
+    use Friendable;
+    use CanFollow, CanBeFollowed;
+    use CanLike, CanBeLiked;
+    use CanRate, CanBeRated;
+    use HasComments;
 
     /**
      * The attributes that are mass assignable.
@@ -59,4 +71,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(ChatEvento::class);
     }
+
+
 }

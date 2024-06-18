@@ -112,3 +112,7 @@ input::-webkit-inner-spin-button {
     text-decoration: none;
     color: #fdcc49;
 }
+.btn {
+    background-color: #ff4b2b !important;
+    color: white !important;
+}

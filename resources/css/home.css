@@ -1,14 +1,14 @@
 body {
     margin: 0;
-  }
-  
-  .header {
+}
+
+.header {
     position: relative;
     height: 400px;
     overflow: hidden;
-  }
-  
-  .header .carousel-bg {
+}
+
+.header .carousel-bg {
     position: absolute;
     top: 0;
     left: 0;
@@ -17,80 +17,84 @@ body {
     background-size: cover;
     background-position: center;
     transition: opacity 1s ease-in-out;
-  }
-  
-  *, :after, :before {
+}
+
+*,
+:after,
+:before {
     box-sizing: border-box;
-  }
-  
-  body {
+}
+
+body {
     display: block;
     margin: 8px;
-  }
-  
-  .banner-slider-form {
+}
+
+.banner-slider-form {
     text-align: center;
     padding: 20px;
-  }
-  
-  .db-wrapper {
+}
+
+.db-wrapper {
     min-height: 65vh;
-  }
-  
-  .cover-img-bg {
+}
+
+
+.cover-img-bg {
     background-size: cover;
     background-position: center;
-  }
-  
-  .cover-img {
+}
+
+.cover-img {
     width: 100%;
     height: auto;
-  }
-  
+}
 
-  .py-5 {
+
+.py-5 {
     padding-bottom: 2rem !important;
     padding-top: 2rem !important;
-  }
-  
-  .pt-5, .py-5 {
+}
+
+.pt-5,
+.py-5 {
     padding-top: 3rem !important;
-  }
-  
-  .py-5 {
+}
+
+.py-5 {
     padding-bottom: 3rem !important;
-  }
-  
-  .bg-gradient {
-    background: linear-gradient(0deg, #2176ff, #212425) !important;
+}
+
+.bg-gradient-categorias {
+    background-color: #e9e9e9d3 !important;
     transition: all .3s ease-out;
-  }
-  
-  .bg-gradient2 {
+}
+
+.bg-gradient2 {
     background: linear-gradient(0deg, #f0f3f0, #7f866a) !important;
     transition: all .3s ease-out;
-  }
-  
-  .rounded-md-pill {
+}
+
+.rounded-md-pill {
     border-radius: 50rem !important;
-  }
-  
-  .smooth-shadow-md {
+}
+
+.smooth-shadow-md {
     box-shadow: 0 9px 26px rgba(0, 0, 0, .19), 0 1.4932px 5.38611px rgba(0, 0, 0, .082), 0 .826568px 1.06088px rgba(0, 0, 0, .063) !important;
-  }
-  
-  .article-card {
+}
+
+.article-card {
     width: 100%;
-    height: 220px;
+    height: 100%;
     border-radius: 12px;
     overflow: hidden;
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     transition: all 300ms;
-  }
-  
-  .article-card .content {
+}
+
+.article-card .content {
     box-sizing: border-box;
     width: 100%;
     position: absolute;
@@ -98,51 +102,235 @@ body {
     height: auto;
     bottom: 0;
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-  }
-  
-  .article-card:hover {
+}
+
+.article-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  }
-  
-  .article-card img {
+}
+
+.article-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  
-  .article-card .date {
+}
+
+.article-card .date {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 4px;
     margin: 0;
-  }
-  
-section{
-  height: 120px;
 }
 
-    .swiper {
-      width: 100%;
-      height: 100%;
-    }
+section {
+    height: 120px;
+}
 
-    .swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.swiper {
+    width: 100%;
+    height: 100%;
+}
 
-    .swiper-slide img {
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    }
+}
 
-    .swiper {
-      margin-left: auto;
-      margin-right: auto;
-    }
+.swiper {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.w-100 {
+    width: 100%;
+    height: 90%;
+}
+
+.img-hover:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
+}
+
+.card {
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Estilos para el contenido dentro de la tarjeta */
+.pb-18 {
+    padding-bottom: 7rem;
+}
+
+
+/* Estilos generales */
+.py-5 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.text-black {
+    color: #000;
+}
+
+/* Estilos específicos para la tarjeta del organizador */
+.card-wrapper {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.card-organizador {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.card-image img {
+    width: 100%;
+    height: auto;
+    transition: 0.5s;
+}
+
+.card-organizador:hover .card-image img {
+    opacity: 0.4;
+}
+
+.card-organizador:hover .card-image {
+    transform: translateY(-20px);
+    transition: transform 0.9s;
+}
+
+/**** Social Icons *****/
+.social-icons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    transition: transform 0.5s, opacity 0.5s;
+    opacity: 0;
+}
+
+.card-organizador:hover .social-icons {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+}
+
+.social-icons li {
+    list-style: none;
+    margin: 0 6px;
+}
+
+.social-icons li a {
+    display: block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #fff;
+    font-size: 23px;
+    color: #333;
+    font-weight: bold;
+    transition: 0.4s;
+}
+
+.social-icons li a:hover {
+    background: #000;
+    color: #fff;
+    transition: 0.2s;
+}
+
+/**** Personal Details ****/
+.details {
+    background: #fff;
+    width: 100%;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+.details h2 {
+    margin: 30px 0;
+    padding: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.details .job-title {
+    font-size: 1rem;
+    line-height: 2.5rem;
+    color: #777;
+    font-weight: 300;
+}
+
+.event-hero__background {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    margin: 0 auto;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    -webkit-filter: blur(50px) brightness(.9);
+    filter: blur(50px) brightness(.9);
+    z-index: 0;
+
+}
+
+.event-hero {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    max-height: 45vw;
+    overflow: hidden;
+    font-size: 0;
+    background-color: #fff;
+    border-radius: 2%;
+}
+
+.banner {
+    left: 25%;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    text-align: center !important;
+
+}
+.btn{
+    background-color: #ff4b2b !important;
+    color: white !important;
+}

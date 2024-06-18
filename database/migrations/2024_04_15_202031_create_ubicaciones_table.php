@@ -31,6 +31,8 @@ class CreateUbicacionesTable extends Migration
             $table->string('ubicacion')->after('fecha_hora');
         });
 
+
         Schema::dropIfExists('ubicaciones');
+ 
     }
 }
