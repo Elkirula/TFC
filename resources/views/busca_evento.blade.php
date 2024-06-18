@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="icon" href="{{ asset('favicon.png') }}">
 
      @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>Home</title>

@@ -1,148 +1,162 @@
-let contadorClicks = 0;
-
+let clickCounter = 0; // Variable to count clicks for creating artists
 
 window.onload = function () {
-    // Cuando se carga la ventana
+    // When the window loads
     var menuToggle = document.getElementById('menu-toggle');
     var wrapper = document.getElementById('wrapper');
 
+    // Toggle menu functionality
     if (menuToggle && wrapper) {
         menuToggle.addEventListener('click', function (e) {
             e.preventDefault();
             wrapper.classList.toggle('toggled');
         });
     }
-    document.getElementById('page-content-wrapper').classList.remove('oculto')
 
+    // Ensure page content wrapper is visible
+    document.getElementById('page-content-wrapper').classList.remove('hidden');
+
+    // Event listeners for various buttons and locations
     btn_home.addEventListener('click', home);
-    btn_nevo.addEventListener('click', crearEvento);
-    location_presencial.addEventListener('click', cargarMapa);
-    btn_cuenta.addEventListener('click', cuentaA);
-    location_online.addEventListener('click', muestraLink);
+    btn_nevo.addEventListener('click', createEvent);
+    location_presencial.addEventListener('click', loadMap);
+    btn_cuenta.addEventListener('click', accountA);
+    location_online.addEventListener('click', showLink);
 }
 
 function home() {
-    document.getElementById('cuenta').classList.add('oculto');
-    document.getElementById('nuevo').classList.add('oculto');
-    document.getElementById('page-content-wrapper').classList.remove('oculto');
+    // Show home content, hide others
+    document.getElementById('account').classList.add('hidden');
+    document.getElementById('new').classList.add('hidden');
+    document.getElementById('page-content-wrapper').classList.remove('hidden');
 }
 
-function crearEvento() {
-    document.getElementById('cuenta').classList.add('oculto');
-    document.getElementById('page-content-wrapper').classList.add('oculto');
-    document.getElementById('nuevo').classList.remove('oculto');
+function createEvent() {
+    // Show create event form, hide others
+    document.getElementById('account').classList.add('hidden');
+    document.getElementById('page-content-wrapper').classList.add('hidden');
+    document.getElementById('new').classList.remove('hidden');
 
-    mas.addEventListener('click', crearArtista);
-    menos.addEventListener('click', borrarArtista);
+    // Event listeners for adding and deleting artists
+    more.addEventListener('click', createArtist);
+    less.addEventListener('click', deleteArtist);
 }
 
-function cuentaA() {
-
-    document.getElementById('nuevo').classList.add('oculto');
-    document.getElementById('page-content-wrapper').classList.add('oculto');
-    document.getElementById('cuenta').classList.remove('oculto');
+function accountA() {
+    // Show account details, hide others
+    document.getElementById('new').classList.add('hidden');
+    document.getElementById('page-content-wrapper').classList.add('hidden');
+    document.getElementById('account').classList.remove('hidden');
 }
 
-function crearArtista() {
-    if (contadorClicks < 3) {
-        // Crear el elemento div con la clase "borde"
-        var divBorde = document.createElement("div");
-        divBorde.classList.add("borde");
+function createArtist() {
+    // Function to create new artist inputs dynamically
+    if (clickCounter < 3) {
+        // Create the div element with the "border" class
+        var divBorder = document.createElement("div");
+        divBorder.classList.add("border");
 
-        // Crear el primer div con la clase "mb-3" y su contenido
+        // Create input fields for artist name, description, music, and image upload
         var div1 = document.createElement("div");
         div1.classList.add("mb-3");
-        div1.innerHTML = '<label for="artistName" class="form-label">Nombre del Artista</label><input type="text" class="form-control" name="artistNombre[]" required>';
+        div1.innerHTML = '<label for="artistName" class="form-label">Artist Name</label><input type="text" class="form-control" name="artistName[]" required>';
 
-        // Crear el segundo div con la clase "mb-3" y su contenido
         var div2 = document.createElement("div");
         div2.classList.add("mb-3");
-        div2.innerHTML = '<label for="artistName" class="form-label">Descripción del Artista</label><input type="text" class="form-control" name="descripcion[]" required>';
+        div2.innerHTML = '<label for="artistDescription" class="form-label">Artist Description</label><input type="text" class="form-control" name="description[]" required>';
 
-        // Crear el tercer div con la clase "mb-3" y su contenido
         var div3 = document.createElement("div");
         div3.classList.add("mb-3");
-        div3.innerHTML = '<label for="artistMusica" class="form-label">Música del Artista</label><input type="text" class="form-control" name="artistMusica[]" required>';
+        div3.innerHTML = '<label for="artistMusic" class="form-label">Artist Music</label><input type="text" class="form-control" name="artistMusic[]" required>';
 
-        // Crear el cuarto div con la clase "mb-3" y su contenido
         var div4 = document.createElement("div");
         div4.classList.add("mb-3");
-        div4.innerHTML = '<label for="artistImage" class="form-label">Subir Imagen</label><input type="file" class="form-control" name="artistImg[]" accept="image/*" required>';
+        div4.innerHTML = '<label for="artistImage" class="form-label">Upload Image</label><input type="file" class="form-control" name="artistImg[]" accept="image/*" required>';
 
-        // Agregar los divs creados al div con clase "borde"
-        divBorde.appendChild(div1);
-        divBorde.appendChild(div2);
-        divBorde.appendChild(div3);
-        divBorde.appendChild(div4);
-        container_multimedia.appendChild(divBorde);
-        if (contadorClicks === 3) {
-            mas.removeEventListener('click', crearArtista);
-            alert('Se alcanzó el máximo de tres clics.');
+        // Append all created elements to the container
+        divBorder.appendChild(div1);
+        divBorder.appendChild(div2);
+        divBorder.appendChild(div3);
+        divBorder.appendChild(div4);
+        container_multimedia.appendChild(divBorder);
+
+        // Limit to 3 artists, disable add button after limit reached
+        if (clickCounter === 3) {
+            more.removeEventListener('click', createArtist);
+            alert('Maximum of three artists reached.');
         }
-        contadorClicks++;
-    }
-
-}
-
-function borrarArtista() {
-    let elemento = container_multimedia.lastChild;
-
-    if (elemento) {
-        container_multimedia.removeChild(elemento);
+        clickCounter++;
     }
 }
 
+function deleteArtist() {
+    // Function to delete the last added artist entry
+    let element = container_multimedia.lastChild;
+    if (element) {
+        container_multimedia.removeChild(element);
+    }
+}
 
-function cargarMapa() {
-    onlineContent.classList.add('oculto');
-    presencialContent.classList.remove('oculto');
+function loadMap() {
+    // Show map for presencial location, hide online content
+    onlineContent.classList.add('hidden');
+    presencialContent.classList.remove('hidden');
 
-    const map = L.map('map', {
+    // Initialize Leaflet map with default center and zoom
+    let map = L.map('map', {
         center: [39.4699, -0.3763],
         zoom: 10
     });
 
+    // Add OpenStreetMap tiles to the map
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 24
     }).addTo(map);
 
+    // Add marker to the map
     let marker = L.marker([39.4699, -0.3763]).addTo(map);
 
+    // Function to update map view and marker position based on selected place
     function updateMap(lat, lon) {
         map.setView([lat, lon], 10);
         marker.setLatLng([lat, lon]);
 
-        document.getElementById('latitud').value = lat;
-        document.getElementById('longitud').value = lon;
+        // Update latitude and longitude inputs
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lon;
     }
 
-    document.getElementById('nombre_lugar').addEventListener('change', function () {
-        const place = this.value;
+    // Event listener for place selection dropdown
+    document.getElementById('place_name').addEventListener('change', function () {
+        let place = this.value;
 
+        // Fetch geolocation data for selected place using Nominatim API
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`)
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
-                    const lat = data[0].lat;
-                    const lon = data[0].lon;
+                    let lat = data[0].lat;
+                    let lon = data[0].lon;
 
+                    // Update map with new coordinates
                     updateMap(lat, lon);
-                    console.log(`Latitud: ${lat}, Longitud: ${lon}`);
+                    console.log(`Latitude: ${lat}, Longitude: ${lon}`);
                 } else {
-                    console.error('Lugar no encontrado');
+                    console.error('Place not found');
                 }
             })
-            .catch(error => console.error('Error en la geocodificación:', error));
+            .catch(error => console.error('Geocoding error:', error));
     });
 
+    // Delayed resize to handle Leaflet map display
     setTimeout(() => {
         map.invalidateSize();
     }, 500);
 }
 
-
-function muestraLink() {
-    presencialContent.classList.add('oculto');
-    map.classList.add('oculto');
-    onlineContent.classList.remove('oculto')
+function showLink() {
+    // Show online content, hide presencial map
+    presencialContent.classList.add('hidden');
+    map.classList.add('hidden');
+    onlineContent.classList.remove('hidden');
 }

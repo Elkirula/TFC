@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Compras;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,15 +11,16 @@ class ComprasController extends Controller
 {
     public function store(Request $request)
     {
-        // Valida y guarda los datos de la compra
+        // Validate and store purchase data
         $compra = new Compras();
-        $compra->user_id = Auth::id(); // ID del usuario autenticado
-        $compra->producto = $request->input('producto');
-        $compra->precio = $request->input('precio');
-        $compra->save();
+        $compra->user_id = Auth::id(); // ID of the authenticated user
+        $compra->producto = $request->input('producto'); // Product name from the request
+        $compra->precio = $request->input('precio'); // Price from the request
+        $compra->save(); // Save the purchase record
 
-        // Otra lógica de tu aplicación...
+        // Additional application logic...
 
-        return redirect()->route('home'); 
+        // Redirect user to the home route after purchase
+        return redirect()->route('home');
     }
 }

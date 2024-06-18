@@ -12,17 +12,17 @@ use \App\Models\User;
 use \RyanChandler\Comments\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 
-
 class EventoController extends Controller
 {
     public function index()
     {
-        // Obtiene todos los eventos de la base de datos
+        // Retrieve all events from the database
         $eventos = Evento::with('multimedia')->get();
-        $user = Auth::user();
-        $usuarios = User::all();
-        $categorias = Categorias::all();
+        $user = Auth::user(); // Get the authenticated user
+        $usuarios = User::all(); // Get all users
+        $categorias = Categorias::all(); // Get all categories
 
+        // Retrieve top-rated events with their average ratings
         $eventos_top = Evento::with('multimedia')
             ->withCount('valoraciones')
             ->orderBy('valoraciones_count', 'desc')
@@ -32,31 +32,29 @@ class EventoController extends Controller
                 return $evento;
             });
 
+        // Retrieve music events specifically
         $eventos_musica = Evento::where('categoria_id', 11)
             ->with('multimedia')
             ->get();
 
-        // Obtener los organizadores ordenados por número de seguidores
+        // Retrieve organizers sorted by number of followers
         $organizadores = User::where('role', 'organizador')
             ->withCount('followers')
             ->orderBy('followers_count', 'desc')
-            ->take(3) // Tomar máximo tres organizadores
+            ->take(3) // Get maximum of three organizers
             ->get();
 
-        // Retorna la vista con los eventos
+        // Return the view with events data
         return view('home', compact('eventos', 'user', 'usuarios', 'eventos_top', 'eventos_musica', 'categorias', 'organizadores'));
     }
 
-
-
-
     public function show($id)
     {
-        // Retrieve the event with its related artists, locations, multimedia, and comments
+        // Retrieve a specific event with its related data: artists, locations, multimedia, and comments
         $evento = Evento::with('artistas', 'ubicaciones', 'multimedia', 'comentarios')->findOrFail($id);
-        $categorias = Categorias::all();
+        $categorias = Categorias::all(); // Get all categories
 
-        // If the user is authenticated, get the user's rating for the event
+        // If user is authenticated, retrieve their rating for the event
         if (Auth::user()) {
             $user = Auth::user();
             $puntuacion = ValoracionesEvento::where('user_id', $user->id)
@@ -66,7 +64,7 @@ class EventoController extends Controller
             $puntuacion = "";
         }
 
-        // Retrieve the category of the event
+        // Retrieve the category ID of the event
         $categoria_id = $evento->categoria_id;
 
         // Get related events from the same category, excluding the current event
@@ -74,7 +72,7 @@ class EventoController extends Controller
             ->where('id', '!=', $id)
             ->get();
 
-        // Extract the YouTube video ID if the event has a multimedia video
+        // Extract YouTube video ID if the event has multimedia video
         if ($evento->multimedia && $evento->multimedia->video != null) {
             $url = $evento->multimedia->video;
             $youtubeVideoId = substr($url, strpos($url, 'v=') + 2);
@@ -82,18 +80,21 @@ class EventoController extends Controller
             $youtubeVideoId = "";
         }
 
-        // Calculate the average rating
+        // Calculate average rating for the event
         $valoracion_media = $evento->valoraciones()->avg('puntuacion');
-        // Return the view with the specific event details
+
+        // Return the view with specific event details
         return view('evento', compact('evento', 'youtubeVideoId', 'puntuacion', 'eventosRelacionados', 'categorias', 'valoracion_media'));
     }
 
     public function buscar(Request $request)
     {
+        // Get search query and category ID from the request
         $query = $request->input('query');
         $categoria_id = $request->input('categoria_id');
-        $categorias = Categorias::all();
+        $categorias = Categorias::all(); // Get all categories
 
+        // Search for events based on title or location name
         $eventos = Evento::where(function ($queryBuilder) use ($query) {
             $queryBuilder->where('titulo', 'LIKE', "%{$query}%")
                 ->orWhereHas('ubicaciones', function ($q) use ($query) {
@@ -103,34 +104,45 @@ class EventoController extends Controller
             ->when($categoria_id, function ($queryBuilder) use ($categoria_id) {
                 return $queryBuilder->where('categoria_id', $categoria_id);
             })
-            ->paginate(9);
+            ->paginate(9); // Paginate results
 
+        // Return the view with search results
         return view('busca_evento', compact('eventos', 'categorias'));
     }
+
     public function guardarComentario(Request $request, $id)
     {
+        // Validate comment content
         $request->validate([
             'contenido' => 'required|string|max:255',
         ]);
 
+        // Find the event to which the comment belongs
         $evento = Evento::findOrFail($id);
+
+        // Save the new comment
         $comentario = new ChatEvento();
         $comentario->evento_id = $evento->id;
         $comentario->user_id = auth()->user()->id;
         $comentario->contenido = $request->contenido;
         $comentario->save();
 
-        return redirect()->back()->with('success', 'Comentario guardado correctamente.');
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Comment saved successfully.');
     }
 
     public function responderComentario(Request $request, $id, $comentarioId)
     {
+        // Validate response content
         $request->validate([
             'contenido' => 'required|string|max:255',
         ]);
 
+        // Find the parent comment to which the response belongs
         $comentarioPadre = ChatEvento::findOrFail($comentarioId);
         $evento = $comentarioPadre->evento;
+
+        // Save the response comment
         $comentario = new ChatEvento();
         $comentario->evento_id = $evento->id;
         $comentario->user_id = auth()->user()->id;
@@ -138,39 +150,41 @@ class EventoController extends Controller
         $comentario->parent_id = $comentarioPadre->id;
         $comentario->save();
 
-        return redirect()->back()->with('success', 'Respuesta guardada correctamente.');
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Response saved successfully.');
     }
-
 
     public function storeComment(Request $request, Evento $evento)
     {
+        // Validate comment data
         $request->validate([
             'comment' => 'required|string|max:255',
             'parent_id' => 'nullable|exists:comments,id'
         ]);
 
-        // Obtener el usuario actual que está realizando el comentario
+        // Get the current user making the comment
         $user = Auth::user();
 
-        // Añadir el comentario, pasando el usuario y el contenido del comentario
+        // Add the comment, passing user and comment content
         $evento->comment($request->comment, $user, parent: $request->parent_id ? Comment::find($request->parent_id) : null);
 
-        return back()->with('success', 'Comentario añadido');
+        // Redirect back with success message
+        return back()->with('success', 'Comment added');
     }
 
     public function puntuacion(Request $request)
     {
+        // Get the authenticated user
         $user = Auth::user();
         if (Auth::user()) {
 
-
-            // Validar los datos recibidos
+            // Validate received data
             $request->validate([
                 'star' => 'required|integer|min:1|max:5',
                 'evento_id' => 'required|integer|exists:eventos,id'
             ]);
 
-            // Insertar la puntuación en la base de datos
+            // Insert rating into the database
             $puntuacion = new ValoracionesEvento();
             $puntuacion->user_id = auth()->user()->id;
             $puntuacion->evento_id = $request->input('evento_id');
@@ -178,27 +192,29 @@ class EventoController extends Controller
             $puntuacion->updated_at = $request->input('updated_at');
             $puntuacion->created_at = $request->input('created_at');
             $puntuacion->save();
-            return redirect()->back()->with('success', 'Puntuación guardada correctamente.');
+            return redirect()->back()->with('success', 'Rating saved successfully.');
         } else {
-            // Redirigir de vuelta con un mensaje de éxito
+            // Redirect back with success message
             return redirect()->back();
         }
     }
+
     public function seguirOrganizador(Request $request, $organizadorId)
     {
         /** @var \App\Models\User $user */
 
+        // Get the authenticated user
         $user = auth()->user();
         $organizador = User::findOrFail($organizadorId);
 
-        // Verifica si el usuario ya sigue al organizador
+        // Check if the user already follows the organizer
         if ($user->isFollowing($organizador)) {
-            return redirect()->back()->with('warning', 'Ya sigues a este organizador.');
+            return redirect()->back()->with('warning', 'You are already following this organizer.');
         }
 
-        // Agrega la relación de seguimiento
+        // Add the follow relationship
         $user->follow($organizador);
 
-        return redirect()->back()->with('success', 'Ahora estás siguiendo a ' . $organizador->name);
+        return redirect()->back()->with('success', 'You are now following ' . $organizador->name);
     }
 }
